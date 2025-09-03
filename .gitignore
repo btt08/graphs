@@ -140,3 +140,6 @@ vite.config.ts.timestamp-*
 
 # Angular
 .angular/*
+
+# Vs Code
+.vscode/*
