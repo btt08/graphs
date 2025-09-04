@@ -1,9 +1,9 @@
 <div class="layout">
   <header class="header"></header>
   <main class="main">
-    <div class="sidebar"></div>
+    <!-- <div class="sidebar"></div> -->
     <div class="content">
-      <div class="filters">
+      <!-- <div class="filters">
         <div class="view-mode">
           <div class="view-mode--option">
             <input
@@ -20,17 +20,16 @@
             <label for="viewMode2">Table</label>
           </div>
         </div>
-      </div>
+      </div> -->
       <div class="content-main">
         <div class="graph-container">
           <div class="graph">
             <h3>Total contracts</h3>
             <app-bar-graph
               [data]="mockData3Values"
-              [height]="200"
+              [config]="config3Values"
               [showLegend]="true"
               />
-              <!-- [config]="config" -->
           </div>
         </div>
         <div class="graph-container">
@@ -38,22 +37,22 @@
             <h3>Total volume</h3>
             <app-bar-graph
               [data]="mockDataSingleValue"
-              [config]="config"
+              [config]="configSingleValueColors"
               [showLegend]="true"
             />
           </div>
         </div>
-        <div class="graph-container">
+        <!-- <div class="graph-container">
           <div class="graph">
             <h3>Average processing time</h3>
             <app-bar-graph
               [data]="mockDataSingleValue"
-              [config]="config"
+              [config]="configSingleValueColors"
               [showLegend]="true"
             />
           </div>
-        </div>
-        <div class="graph-container">
+        </div> -->
+        <!-- <div class="graph-container">
           <div class="graph">
             <h3>Execution on time</h3>
             <app-bar-graph
@@ -62,7 +61,7 @@
               [showLegend]="true"
             />
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
   </main>

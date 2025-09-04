@@ -14,7 +14,18 @@ export class App {
   mockData3Values = mockData3Values;
   mockDataSingleValue = mockDataSingleValue;
 
-  config: StackedBarConfig = {
+  config3Values: StackedBarConfig = {
+    stackKeys: ['contracts', 'amendments', 'terminations'],
+    colors: {
+      contracts: '#90caf9',
+      amendments: '#1565c0',
+      terminations: '#e0e0e0',
+    },
+    totalKey: 'total',
+    labelKey: 'year',
+  };
+
+  configSingleValueColors: StackedBarConfig = {
     stackKeys: ['total'],
     colors: {
       total: '#90caf9',

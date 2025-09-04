@@ -1,10 +1,4 @@
 import {
-  StackedBarConfig,
-  ChartContext,
-} from './interfaces/bar-graph.interfaces';
-import * as BarGraphDrawers from './bar-graph.drawers';
-import { parseValue } from './bar-graph.utils';
-import {
   Component,
   OnInit,
   ViewEncapsulation,
@@ -13,6 +7,12 @@ import {
   input,
 } from '@angular/core';
 import * as d3 from 'd3';
+import {
+  StackedBarConfig,
+  ChartContext,
+} from './interfaces/bar-graph.interfaces';
+import * as BarGraphDrawers from './services/bar-graph.drawers';
+import { parseValue } from './services/bar-graph.utils';
 
 let barGraphInstanceCounter = 0;
 
@@ -37,7 +37,7 @@ export class BarGraph implements OnInit {
     labelKey: 'year',
   });
   readonly height = input<number>(200);
-  readonly width = input(300);
+  readonly width = input(400);
   readonly margin = input({ top: 20, right: 30, bottom: 30, left: 40 });
   readonly orientation = input<'vertical' | 'horizontal'>('vertical');
   readonly showLegend = input<boolean>(true);
@@ -55,9 +55,8 @@ export class BarGraph implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log('Height:', this.height());
-    console.log('Width:', this.width());
     // Add extra space at the top for the label (vertical) or left (horizontal)
+    // const extraSpace = this.orientation() === 'vertical' ? 30 : 30;
     const extraSpace = this.orientation() === 'vertical' ? 30 : 30;
     // For horizontal with legend, add extra height for legend
     let svgHeight =
@@ -85,7 +84,10 @@ export class BarGraph implements OnInit {
     this.barGroup = this.svg
       .append('g')
       .attr('class', 'bar-group')
-      .attr('transform', `translate(${this.margin().left},${this.margin().top})`);
+      .attr(
+        'transform',
+        `translate(${this.margin().left},${this.margin().top})`
+      );
     this.createStackedBarChart(extraSpace);
   }
 
@@ -106,8 +108,8 @@ export class BarGraph implements OnInit {
         svg: this.svg,
         barGroup: this.barGroup,
         defs: this.svg.append('defs'),
-        barWidth: 16,
-        barSpacing: 32,
+        barWidth: 30,
+        barSpacing: 46,
         config: this.config(),
         margin: { ...this.margin(), top: this.margin().top + extraSpace },
         height: this.height(),
@@ -252,16 +254,17 @@ export class BarGraph implements OnInit {
     ctx.config.stackKeys.forEach((key, i) => {
       legend
         .append('circle')
-        .attr('cx', i * 180 + 12)
+        .attr('cx', i * 120 + 12)
         .attr('cy', 12)
-        .attr('r', 12)
+        .attr('r', 8)
         .attr('fill', ctx.config.colors[key] || '#ccc');
       legend
         .append('text')
-        .attr('x', i * 180 + 32)
+        .attr('x', i * 120 + 24)
         .attr('y', 18)
-        .attr('font-size', 16)
-        .attr('fill', '#333')
+        .attr('font-size', 14)
+        .attr('fill', '#848484')
+        .attr('font-family', 'Arial, sans-serif')
         .text(key.charAt(0).toUpperCase() + key.slice(1));
     });
   }
