@@ -1,8 +1,9 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
+import { IStackedBarConfig } from './components/bar-graph/interfaces/bar-graph.interfaces';
 import { BarGraph } from './components/bar-graph/bar-graph';
 import { mockData3Values, mockDataSingleValue } from './mocks/mockData';
-import { StackedBarConfig } from './components/bar-graph/interfaces/bar-graph.interfaces';
+
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, BarGraph],
@@ -14,7 +15,7 @@ export class App {
   mockData3Values = mockData3Values;
   mockDataSingleValue = mockDataSingleValue;
 
-  config3Values: StackedBarConfig = {
+  config3Values: IStackedBarConfig = {
     stackKeys: ['contracts', 'amendments', 'terminations'],
     colors: {
       contracts: '#90caf9',
@@ -25,10 +26,12 @@ export class App {
     labelKey: 'year',
   };
 
-  configSingleValueColors: StackedBarConfig = {
+  configSingleValueColors: IStackedBarConfig = {
     stackKeys: ['total'],
     colors: {
-      total: '#90caf9',
+      '< 40': '#90caf9',
+      '< 60': '#ffe082',
+      '>= 60': '#e57373',
     },
     totalKey: 'total',
     labelKey: 'year',

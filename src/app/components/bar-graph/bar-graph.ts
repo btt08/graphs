@@ -8,8 +8,9 @@ import {
 } from '@angular/core';
 import * as d3 from 'd3';
 import {
-  StackedBarConfig,
-  ChartContext,
+  IChartContext,
+  IMarginObj,
+  IStackedBarConfig,
 } from './interfaces/bar-graph.interfaces';
 import * as BarGraphDrawers from './services/bar-graph.drawers';
 import { parseValue } from './services/bar-graph.utils';
@@ -26,7 +27,7 @@ let barGraphInstanceCounter = 0;
 export class BarGraph implements OnInit {
   @ViewChild('chartContainer', { static: true }) chartContainer!: ElementRef;
   readonly data = input<Array<Record<string, any>>>([]);
-  readonly config = input<StackedBarConfig>({
+  readonly config = input<IStackedBarConfig>({
     stackKeys: ['contracts', 'amendments', 'terminations'],
     colors: {
       contracts: '#90caf9',
@@ -37,8 +38,13 @@ export class BarGraph implements OnInit {
     labelKey: 'year',
   });
   readonly height = input<number>(200);
-  readonly width = input(400);
-  readonly margin = input({ top: 20, right: 30, bottom: 30, left: 40 });
+  readonly width = input<number>(400);
+  readonly margin = input<IMarginObj>({
+    top: 20,
+    right: 30,
+    bottom: 30,
+    left: 40,
+  });
   readonly orientation = input<'vertical' | 'horizontal'>('vertical');
   readonly showLegend = input<boolean>(true);
   svg: any;
@@ -55,21 +61,13 @@ export class BarGraph implements OnInit {
   }
 
   ngOnInit(): void {
-    // Add extra space at the top for the label (vertical) or left (horizontal)
-    // const extraSpace = this.orientation() === 'vertical' ? 30 : 30;
-    const extraSpace = this.orientation() === 'vertical' ? 30 : 30;
     // For horizontal with legend, add extra height for legend
     let svgHeight =
       this.orientation() === 'vertical'
-        ? this.height() + this.margin().top + this.margin().bottom + extraSpace
+        ? this.height() + this.margin().top + this.margin().bottom
         : this.height() + this.margin().top + this.margin().bottom;
     const orientation = this.orientation();
-    if (orientation === 'horizontal' && this.showLegend()) {
-      // Add enough space for legend below all bars (bar count * barSpacing + margin)
-      // const legendSpace =
-      //   60 + (this.data().length > 0 ? (this.data().length - 1) * 40 : 0);
-      // svgHeight += legendSpace;
-    }
+
     this.svg = d3
       .select(this.chartContainer.nativeElement)
       .append('svg')
@@ -77,9 +75,10 @@ export class BarGraph implements OnInit {
         'width',
         orientation === 'vertical'
           ? this.width() + this.margin().left + this.margin().right
-          : this.width() + this.margin().left + this.margin().right + extraSpace
+          : this.width() + this.margin().left + this.margin().right
       )
       .attr('height', svgHeight);
+
     // Create a group for all bars, shifted by margin
     this.barGroup = this.svg
       .append('g')
@@ -88,22 +87,23 @@ export class BarGraph implements OnInit {
         'transform',
         `translate(${this.margin().left},${this.margin().top})`
       );
-    this.createStackedBarChart(extraSpace);
+    this.createStackedBarChart();
   }
 
-  private createStackedBarChart(extraSpace: number = 0): void {
+  private createStackedBarChart(): void {
     // Find the max value for scaling
     const totalKey = this.config().totalKey;
     const maxValue = d3.max(this.data(), (d) => parseValue(d[totalKey])) || 1;
 
-    let chartContext: ChartContext;
+    let chartContext: IChartContext;
     if (this.orientation() === 'vertical') {
       const availableBarHeight =
-        this.height() - this.margin().top - this.margin().bottom - extraSpace;
+        this.height() - this.margin().top - this.margin().bottom;
       const yScale = d3
         .scaleLinear()
         .domain([0, maxValue])
         .range([0, availableBarHeight]);
+
       chartContext = {
         svg: this.svg,
         barGroup: this.barGroup,
@@ -111,12 +111,13 @@ export class BarGraph implements OnInit {
         barWidth: 30,
         barSpacing: 46,
         config: this.config(),
-        margin: { ...this.margin(), top: this.margin().top + extraSpace },
+        margin: { ...this.margin(), top: this.margin().top },
         height: this.height(),
         tooltip: this.createTooltip(),
         yScale,
         instanceId: this.instanceId,
       };
+
       this.data().forEach((d, i) => {
         BarGraphDrawers.drawOuterBarVertical(chartContext, d, i);
         BarGraphDrawers.defineClipPathVertical(chartContext, d, i);
@@ -131,7 +132,7 @@ export class BarGraph implements OnInit {
       });
     } else {
       const availableBarWidth =
-        this.width() - this.margin().left - this.margin().right - extraSpace;
+        this.width() - this.margin().left - this.margin().right;
       const xScale = d3
         .scaleLinear()
         .domain([0, maxValue])
@@ -140,15 +141,15 @@ export class BarGraph implements OnInit {
         svg: this.svg,
         barGroup: this.barGroup,
         defs: this.svg.append('defs'),
-        barWidth: 16,
-        barSpacing: 32,
+        barWidth: 30,
+        barSpacing: 46,
         config: this.config(),
-        margin: { ...this.margin(), left: this.margin().left + extraSpace },
+        margin: { ...this.margin(), left: this.margin().left },
         height: this.height(),
         tooltip: this.createTooltip(),
         xScale,
         instanceId: this.instanceId,
-      } as any;
+      };
       this.data().forEach((d, i) => {
         BarGraphDrawers.drawOuterBarHorizontal(chartContext, d, i);
         BarGraphDrawers.defineClipPathHorizontal(chartContext, d, i);
@@ -187,7 +188,7 @@ export class BarGraph implements OnInit {
   /** D3 event: bar mouseover */
   private onBarMouseOver(
     event: MouseEvent,
-    ctx: ChartContext,
+    ctx: IChartContext,
     s: { key: string; value: number },
     d: any
   ) {
@@ -212,7 +213,7 @@ export class BarGraph implements OnInit {
   }
 
   /** D3 event: bar mousemove */
-  private onBarMouseMove(event: MouseEvent, ctx: ChartContext) {
+  private onBarMouseMove(event: MouseEvent, ctx: IChartContext) {
     ctx.tooltip
       .style('left', event.pageX + 10 + 'px')
       .style('top', event.pageY - 28 + 'px');
@@ -221,7 +222,7 @@ export class BarGraph implements OnInit {
   /** D3 event: bar mouseout */
   private onBarMouseOut(
     event: MouseEvent,
-    ctx: ChartContext,
+    ctx: IChartContext,
     s: { key: string; value: number },
     d: any
   ) {
@@ -235,11 +236,11 @@ export class BarGraph implements OnInit {
   }
 
   /** Draws the legend below the chart, ensures SVG is tall enough */
-  private drawLegend(ctx: ChartContext) {
+  private drawLegend(ctx: IChartContext) {
     const legendY =
       this.orientation() === 'vertical'
         ? ctx.height + ctx.margin.bottom / 2
-        : this.data().length * ctx.barSpacing + 15;
+        : this.data().length * ctx.barSpacing + 46;
     const legendHeight = 32;
     const svgEl = d3.select(ctx.svg.node());
     const currentHeight = +svgEl.attr('height');
@@ -247,20 +248,35 @@ export class BarGraph implements OnInit {
     if (currentHeight < neededHeight) {
       svgEl.attr('height', neededHeight);
     }
+
+    // Calculate legend width
+    const legendItemWidth = 120;
+    const legendItems = Object.entries(ctx.config.colors);
+    const totalLegendWidth = legendItems.length * legendItemWidth;
+
+    // SVG inner width (excluding margins)
+    const svgInnerWidth =
+      (+svgEl.attr('width') || 0) - (ctx.margin.left + (ctx.margin.right || 0));
+
+    // Center the legend group
+    const legendX =
+      Math.max(0, (svgInnerWidth - totalLegendWidth) / 2) + ctx.margin.left;
+
     const legend = ctx.svg
       .append('g')
       .attr('class', 'legend')
-      .attr('transform', `translate(${ctx.margin.left}, ${legendY})`);
-    ctx.config.stackKeys.forEach((key, i) => {
+      .attr('transform', `translate(${legendX}, ${legendY})`);
+
+    legendItems.forEach(([key, color], i) => {
       legend
         .append('circle')
-        .attr('cx', i * 120 + 12)
+        .attr('cx', i * legendItemWidth + 12)
         .attr('cy', 12)
         .attr('r', 8)
         .attr('fill', ctx.config.colors[key] || '#ccc');
       legend
         .append('text')
-        .attr('x', i * 120 + 24)
+        .attr('x', i * legendItemWidth + 24)
         .attr('y', 18)
         .attr('font-size', 14)
         .attr('fill', '#848484')

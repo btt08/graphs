@@ -1,8 +1,8 @@
-import { ChartContext } from '../interfaces/bar-graph.interfaces';
+import { IChartContext } from '../interfaces/bar-graph.interfaces';
 import { parseValue, getColor, getBarId } from './bar-graph.utils';
 
 // --- VERTICAL DRAW HELPERS ---
-export function drawOuterBarVertical(ctx: ChartContext, d: any, i: number) {
+export function drawOuterBarVertical(ctx: IChartContext, d: any, i: number) {
   const x = i * ctx.barSpacing + ctx.margin.left;
   const yBase = ctx.height - ctx.margin.bottom;
   const totalValue = parseValue(d[ctx.config.totalKey]);
@@ -17,7 +17,7 @@ export function drawOuterBarVertical(ctx: ChartContext, d: any, i: number) {
     .attr('shape-rendering', 'geometricPrecision');
 }
 
-export function defineClipPathVertical(ctx: ChartContext, d: any, i: number) {
+export function defineClipPathVertical(ctx: IChartContext, d: any, i: number) {
   const x = i * ctx.barSpacing + ctx.margin.left;
   const yBase = ctx.height - ctx.margin.bottom;
   const totalValue = parseValue(d[ctx.config.totalKey]);
@@ -28,7 +28,7 @@ export function defineClipPathVertical(ctx: ChartContext, d: any, i: number) {
 }
 
 export function drawStackedSegmentsVertical(
-  ctx: ChartContext,
+  ctx: IChartContext,
   d: any,
   i: number,
   onBarEvents: any
@@ -66,7 +66,7 @@ export function drawStackedSegmentsVertical(
   });
 }
 
-export function drawBaseLabelVertical(ctx: ChartContext, d: any, i: number) {
+export function drawBaseLabelVertical(ctx: IChartContext, d: any, i: number) {
   const x = i * ctx.barSpacing + ctx.margin.left;
   const yBase = ctx.height - ctx.margin.bottom;
   ctx.barGroup
@@ -74,12 +74,12 @@ export function drawBaseLabelVertical(ctx: ChartContext, d: any, i: number) {
     .attr('x', x + ctx.barWidth / 2)
     .attr('y', yBase + 20)
     .attr('text-anchor', 'middle')
-    .attr('font-size', 12)
-    .attr('fill', '#333')
+    .attr('font-size', 14)
+    .attr('fill', '#848484')
     .text(d[ctx.config.labelKey]);
 }
 
-export function drawDataLabelVertical(ctx: ChartContext, d: any, i: number) {
+export function drawDataLabelVertical(ctx: IChartContext, d: any, i: number) {
   const x = i * ctx.barSpacing + ctx.margin.left;
   const yBase = ctx.height - ctx.margin.bottom;
   const barHeight = ctx.yScale!(parseValue(d[ctx.config.totalKey]));
@@ -88,9 +88,8 @@ export function drawDataLabelVertical(ctx: ChartContext, d: any, i: number) {
     .attr('x', x + ctx.barWidth / 2)
     .attr('y', yBase - barHeight - 20)
     .attr('text-anchor', 'middle')
-    .attr('font-size', 12)
-    .attr('font-weight', 'bold')
-    .attr('fill', '#333')
+    .attr('font-size', 14)
+    .attr('fill', '#848484')
     .text(d[ctx.config.totalKey]);
 }
 
@@ -110,7 +109,7 @@ function getRoundedRectPath(
 }
 
 // --- HORIZONTAL DRAW HELPERS ---
-export function drawOuterBarHorizontal(ctx: ChartContext, d: any, i: number) {
+export function drawOuterBarHorizontal(ctx: IChartContext, d: any, i: number) {
   const y = i * ctx.barSpacing + ctx.margin.top;
   const xBase = ctx.margin.left;
   const totalValue = parseValue(d[ctx.config.totalKey]);
@@ -131,7 +130,7 @@ export function drawOuterBarHorizontal(ctx: ChartContext, d: any, i: number) {
     .attr('shape-rendering', 'geometricPrecision');
 }
 
-export function defineClipPathHorizontal(ctx: ChartContext, d: any, i: number) {
+export function defineClipPathHorizontal(ctx: IChartContext, d: any, i: number) {
   const y = i * ctx.barSpacing + ctx.margin.top;
   const xBase = ctx.margin.left;
   const totalValue = parseValue(d[ctx.config.totalKey]);
@@ -148,7 +147,7 @@ export function defineClipPathHorizontal(ctx: ChartContext, d: any, i: number) {
 }
 
 export function drawStackedSegmentsHorizontal(
-  ctx: ChartContext,
+  ctx: IChartContext,
   d: any,
   i: number,
   onBarEvents: any
@@ -186,7 +185,7 @@ export function drawStackedSegmentsHorizontal(
   });
 }
 
-export function drawYearLabelHorizontal(ctx: ChartContext, d: any, i: number) {
+export function drawYearLabelHorizontal(ctx: IChartContext, d: any, i: number) {
   const y = i * ctx.barSpacing + ctx.margin.top;
   ctx.barGroup
     .append('text')
@@ -194,11 +193,11 @@ export function drawYearLabelHorizontal(ctx: ChartContext, d: any, i: number) {
     .attr('y', y + ctx.barWidth / 2 + 6)
     .attr('text-anchor', 'end')
     .attr('font-size', 14)
-    .attr('fill', '#333')
+    .attr('fill', '#848484')
     .text(d[ctx.config.labelKey]);
 }
 
-export function drawTotalLabelHorizontal(ctx: ChartContext, d: any, i: number) {
+export function drawTotalLabelHorizontal(ctx: IChartContext, d: any, i: number) {
   const y = i * ctx.barSpacing + ctx.margin.top;
   const xBase = ctx.margin.left;
   const barWidth = ctx.xScale!(parseValue(d[ctx.config.totalKey]));
@@ -207,9 +206,9 @@ export function drawTotalLabelHorizontal(ctx: ChartContext, d: any, i: number) {
     .attr('x', xBase + barWidth + 10)
     .attr('y', y + ctx.barWidth / 2 + 6)
     .attr('text-anchor', 'start')
-    .attr('font-size', 16)
+    .attr('font-size', 14)
     .attr('font-weight', 'bold')
-    .attr('fill', '#333')
+    .attr('fill', '#848484')
     .text(d[ctx.config.totalKey]);
 }
 

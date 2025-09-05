@@ -1,4 +1,4 @@
-export interface StackedBarConfig {
+export interface IStackedBarConfig {
   /**
    * The keys to stack, in order from bottom to top.
    * Example: ['contracts', 'amendments', 'terminations']
@@ -23,13 +23,13 @@ export interface StackedBarConfig {
   colorFn?: (value: number, key: string, d: any) => string;
 }
 
-export interface ChartContext {
+export interface IChartContext {
   svg: any;
   barGroup: any;
   defs: any;
   barWidth: number;
   barSpacing: number;
-  config: StackedBarConfig;
+  config: IStackedBarConfig;
   margin: { top: number; right: number; bottom: number; left: number };
   height: number;
   tooltip: any;
@@ -43,4 +43,11 @@ export interface ChartContext {
   fontSize?: number;
   /** Responsive corner radius for bars */
   radius?: number;
+}
+
+export interface IMarginObj {
+  top: number;
+  right: number;
+  bottom: number;
+  left: number;
 }

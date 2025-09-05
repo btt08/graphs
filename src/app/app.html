@@ -1,40 +1,20 @@
 <div class="layout">
-  <header class="header"></header>
   <main class="main">
-    <!-- <div class="sidebar"></div> -->
     <div class="content">
-      <!-- <div class="filters">
-        <div class="view-mode">
-          <div class="view-mode--option">
-            <input
-              type="radio"
-              name="viewMode"
-              id="viewMode1"
-              value="1"
-              checked
-            />
-            <label for="viewMode1">Graph</label>
-          </div>
-          <div class="view-mode--option">
-            <input type="radio" name="viewMode" id="viewMode2" value="2" />
-            <label for="viewMode2">Table</label>
-          </div>
-        </div>
-      </div> -->
-      <div class="content-main">
+           <div class="content-main">
         <div class="graph-container">
           <div class="graph">
-            <h3>Total contracts</h3>
+            <h3>Stacked vertical</h3>
             <app-bar-graph
               [data]="mockData3Values"
               [config]="config3Values"
               [showLegend]="true"
-              />
+            />
           </div>
         </div>
         <div class="graph-container">
           <div class="graph">
-            <h3>Total volume</h3>
+            <h3>Colored vertical</h3>
             <app-bar-graph
               [data]="mockDataSingleValue"
               [config]="configSingleValueColors"
@@ -42,55 +22,30 @@
             />
           </div>
         </div>
-        <!-- <div class="graph-container">
+        <div class="graph-container">
           <div class="graph">
-            <h3>Average processing time</h3>
+            <h3>Colored horizontal</h3>
             <app-bar-graph
               [data]="mockDataSingleValue"
               [config]="configSingleValueColors"
+              [orientation]="'horizontal'"
               [showLegend]="true"
             />
           </div>
-        </div> -->
-        <!-- <div class="graph-container">
+        </div>
+        <div class="graph-container">
           <div class="graph">
-            <h3>Execution on time</h3>
+            <h3>Stacked horizontal</h3>
             <app-bar-graph
-              [data]="mockDataSingleValue"
-              [config]="config"
+              [data]="mockData3Values"
+              [config]="config3Values"
+              [orientation]="'horizontal'"
               [showLegend]="true"
             />
           </div>
-        </div> -->
+        </div>
       </div>
     </div>
   </main>
-  <footer class="footer"></footer>
 </div>
 <router-outlet />
-
-<!-- <h1>D3 GRAPHS PLAYGROUND</h1>
-<h2>Bar Graphs</h2>
-<div
-  style="
-    height: 90vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-  "
->
-  <div>
-    <h3>Bar Graph with single value</h3>
-    <app-bar-graph
-      [data]="mockDataSingleValue"
-      [config]="config"
-      [orientation]="'horizontal'"
-      [showLegend]="true"
-    />
-  </div>
-  <div>
-    <h3>Bar Graph with 3 values</h3>
-    <app-bar-graph [data]="mockData3Values" />
-  </div>
-</div> -->
